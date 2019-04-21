@@ -1,9 +1,10 @@
 import api from '../../api/api.js'
-import {CHECK_ARTICLECODE,GET_EDITARTICLE} from '../types'
+import {CHECK_ARTICLECODE,GET_EDITARTICLE,GET_ADMIN_ARTICLELIST} from '../types'
 var state={
     errcode:'',
-    articleValue:null,
-    articleList:null
+    articleValue:{},
+    articleList:null,
+    total:0
 };
 
 var mutations={
@@ -11,10 +12,13 @@ var mutations={
         state.errcode = result;
     },
     [GET_EDITARTICLE]( state,result){
-        state.articleValue = result;
+        console.log("edit",result);
+        state.articleValue = result;//有可能多个赋值，之前取值时读的脏数据，然后后面覆盖的就不是最新的value
+     //   state.articleValue =Object.assign({},state.articleValue,result);
     },
     [GET_ADMIN_ARTICLELIST](state,result){
-        state.articleList = result;
+        state.articleList = result.rows;
+        state.total = result.total;
     }
 }
 var actions ={
@@ -31,7 +35,9 @@ var actions ={
         })
     },
     editArticle : function ({commit},param) {
-        api.getArticleByCode(param).then(function(value){
+        console.log(param)
+
+       api.getEditArticleByCode(param).then(function(value){
             var data = ""
             if(value&&value.success){
                 data = value.data&& value.data&& value.data[0];

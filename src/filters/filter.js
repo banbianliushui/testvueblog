@@ -33,6 +33,14 @@ function formatDate(date,fmt){
     }
     return fmt
 }
+
+function articleState(state){
+    if(state == 2){
+        return "已发布";
+    }
+    return "未发布";
+}
 module.exports={
-    formatDate:formatDate
+    formatDate:formatDate,
+    articleState:articleState
 }

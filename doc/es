@@ -1,0 +1,10 @@
+
+1.export  import/exports  require
+
+require / exports 是 CommonJS(在Node中实现) , import / export 是 ES2015 的模块
+
+https://www.zhihu.com/question/56820346/answer/150552542
+
+http://es6.ruanyifeng.com/#docs/module-loader#ES6-%E6%A8%A1%E5%9D%97%E4%B8%8E-CommonJS-%E6%A8%A1%E5%9D%97%E7%9A%84%E5%B7%AE%E5%BC%82
+
+如果使用 export import 需使用babel-node m2.js 启动

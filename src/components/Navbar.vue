@@ -3,7 +3,7 @@
         <ul class="nav-ul clearfix">
             <li><router-link to="/" class="nav-item" :class="{'active':$route.name=='home'}">主页</router-link></li>
             <li><router-link to="/glean" class="nav-item" :class="{'active':$route.name=='glean'}">相册</router-link></li>
-            <li v-if="isauth"><router-link to="/admin" class="nav-item" :class="{'active':$route.name=='admin'}">管理</router-link></li>
+            <li v-if="isauth"><router-link to="/admin" class="nav-item" :class="{'active':$route.name.indexOf('admin')!=-1}">管理</router-link></li>
             <!--<li  v-bind:class="{'active':isHome}" v-on:click="homeClick" >首页</li>-->
             <!--<li  v-bind:class="{'active':isGleaning}" v-on:click="gleanClick"  >拾遗</li>-->
             <!--<li  v-bind:class="{'active':isDaily}"  v-on:click="dailyClick" >{{msg}}</li>-->
@@ -68,7 +68,8 @@
 
     }
     .nav-item.active{
-        color: #c6ea08;
+       /* color: #c6ea08;*/
+        color:#efd30b;
     }
     a{
         text-decoration: none;

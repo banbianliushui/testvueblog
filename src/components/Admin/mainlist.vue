@@ -1,40 +1,91 @@
 <template>
     <div>
         <ul>
-            <li class="alist-item" v-for="article in articleList">
-         <!--       <div>
-                    <h3><a  v-bind:href="item.url" >{{item.title}}</a></h3>
-                    <span><a>编辑</a><a>删除</a><a>发布</a></span>
-                </div>-->
-
-               <!-- <section class="alist-item" v-for="article in articleList" >-->
-                    <div class="item-title" ><router-link :to="{ name: 'article', params: { code: article.code }}">{{article.title}}</router-link></div>
-
+            <li class="alist-item clearfix">
+                <div class="item-title b-font"><a>标题</a></div>
+                <div class="item-right">
+                    <span class="item-state b-font"       >状态</span>
+                    <span class="item-action b-font">操作</span>
+                    <span class="item-time b-font">创建时间</span>
+                </div>
+            </li>
+            <li class="alist-item clearfix" v-for="article in articleList">
+                <div class="item-title" ><router-link :to="{ name: 'article', params: { code: article.code }}">{{article.title}}</router-link></div>
                     <div class="item-right">
-                        <span><router-link to="{ name: 'admin', params: { code: article.code }}">编辑</router-link> <a @click="publishItem">发布</a></span>
+                        <span class="item-state" >{{article.state | articleState}}</span>
+                        <span class="item-action"><router-link :to="{ name: 'adminedit', params: { code: article.code }}" class="edit-btn">编辑</router-link> </span>
                         <span class="item-time">{{article.publishtime | formatDate}}</span>
                     </div>
-               <!-- </section>-->
+
             </li>
         </ul>
     </div>
 </template>
+<style>
+
+    .item-state{
+        display: inline-block;
+        width: 100px;
+        text-align: center;
+    }
+    .item-action{
+        display: inline-block;
+        width: 120px;
+        text-align: center;
+    }
+
+    .item-title{
+        float: left;
+    }
+
+    .item-right{
+        float:right;
+        width: 300px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .item-time{
+        width: 200px;
+        display: inline-block;
+        text-align: center;
+    }
+    .alist-item{
+        background: white;
+        padding: 5px;
+        margin-top: 5px;
+        box-shadow: 1px 3px 1px #eee;
+    }
+    .edit-btn{
+      /*  color:#eab30e;*/
+        color:#efd30b;
+    }
+
+</style>
 <script>
    export default {
      /*  props:['essaylist'],*/
        data (){
-           articleList:{}
+          return { }
        },
        computed:{
-          /* articleList:function () {
-               return this.essaylist;
-           }*/
+           articleList:function () {
+               console.log(this.$store.state.admin.articleList)
+             return  this.$store.state.admin.articleList;
+           },
+           total:function () {
+              return this.$store.state.admin.total;
+           }
+         /*  articleList:function(){
+
+           },*/
        },
        methods:{
+           publishItem(){
 
+           }
        },
        created:function(){
-           this.$store.dispatch('getArticleList')
+           this.$store.dispatch('queryAllArticle')
        }
    }
 

@@ -2,38 +2,28 @@
     <div class="bc-main-outer">
 
         <ul class="bc-left-nav clearfix">
-            <li><a @click="queryessaylist"> 随笔</a></li>
-            <li><a @click="rawBox"> 草稿箱 </a></li>
+           <!-- <li><a @click="alllist"> 所有</a></li>-->
+            <li><router-link to="/admin/add" class="bc-sbar-item"><i class="iconfont  icon-r-margin">&#xe60e;</i><span>新增</span></router-link></li>
+           <li><router-link to="/admin/essaylist" class="bc-sbar-item"><span>随笔</span></router-link></li>
+          <!--  <li><a @click="queryessaylist"> 随笔</a></li>-->
+            <li><a @click="rawBox" class="bc-sbar-item"> 草稿箱 </a></li>
         </ul>
-
         <div class="bc-main">
             <div  class="bc-main-list " >
-
+                <router-view></router-view>
+               <!-- <mainlist  v-if="islist"></mainlist>-->
             </div>
-            <div class="clearfix">
-                <div class="right ">
-                  <!--  <a @click="publish" class="publish-btn">发布</a>-->
-                    <span>
-                         &nbsp;&nbsp;发布<input type="checkbox" id="publish"  v-model="ispublish" name="publish">
-                    </span>
-                    <span>
-                         &nbsp;&nbsp;允许评论<input type="checkbox" id="comment"  v-model="iscomment" name="comment">
-                    </span>
-                </div>
-            </div>
-
-            <editor        ></editor>
         </div>
     </div>
 
 </template>
 <script>
-    import editor from '../Editor/editor.vue'
+
     export default{
         props:['code'],
         data(){
             return {
-
+                islist:false,
                 summaryValue:'',
                 ispublish:true,
                 iscomment:true
@@ -47,7 +37,7 @@
               /*  return   this.$store.state.admin.articleValue*/
             }
         },
-        components:{editor},
+
         methods:{
             publish:function(){
 
@@ -60,7 +50,12 @@
             }
         },
         created:function () {
-         /*   if(this.code!=""){
+            ///admin/add
+            if( this.$route.name =='admin'){
+                this.$router.push({path:'/admin/add'})
+            }
+
+          /* if(this.code!=""){
                 var param ={code:this.code};
                 this.$store.dispatch('editArticle',param)
             }*/
@@ -70,12 +65,25 @@
 </script>
 
 <style>
+
+    .bc-sbar-item{
+        list-style: none;
+        padding: 2px 8px;
+        cursor: pointer;
+        border: 1px solid #eabe47;
+        margin-right: 10px;
+        border-radius: 5px;
+        background: #efd30b;
+        color: white;
+        background-color: rgba(239, 211, 11, 0.7);
+    }
+
     .bc-main-outer{
         padding-top: 20px;
     }
     .bc-left-nav{
-        width: 150px;
-        float: left;
+       /* width: 150px;*/
+       /*float: left;*/
         position: relative;
         /* height: 100%; */
         /* overflow-y: auto; */
@@ -83,8 +91,8 @@
         color: #f2f2f2;
         z-index: 100;
         margin: 0;
-        /* margin-bottom: -60px; */
-       /* padding-top: 20px;*/
+        margin-bottom: 20px;
+        margin-top: 10px;
     }
     .bc-left-nav li {
         list-style: none;
@@ -92,10 +100,10 @@
         float:left;
     }
     .bc-left-nav li a{
-        list-style: none;
-        color: #b5d802;
+       /* list-style: none;
+        color:#efd30b;
         padding:5px 8px;
-        cursor:pointer;
+        cursor:pointer;*/
     }
     .bc-main{
         padding-right:40px;

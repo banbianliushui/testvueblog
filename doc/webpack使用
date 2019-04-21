@@ -1,0 +1,79 @@
+
+
+2.
+webpack打包第三方类库的正确姿势
+http://www.cnblogs.com/myqianlan/p/5626505.html
+ entry: {
+        index: './app/main.jsx',
+        vendor: ['react', 'react-dom', 'react-router', 'classnames']
+    },
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        filename: "[name].[chunkHash:8].js",
+        publicPath: '',
+        chunkFilename: "[name].[chunkHash:8].js",
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor'],
+        }),
+    ]
+
+
+
+ entry: {
+        index: './app/main.jsx',
+        vendor: ['react', 'react-dom', 'react-router', 'classnames']
+    },
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        filename: "[name].[chunkHash:8].js",
+        publicPath: '',
+        chunkFilename: "[name].[chunkHash:8].js",
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor', 'manifest'],
+        }),
+    ]
+1.引入第三方外部模块
+https://github.com/jantimon/html-webpack-plugin
+entry: {
+    page: 'path/to/page.js',
+    jquery: 'node_modules/jquery/dist/jquery.min.js'
+}
+new HtmlWebpackPlugin({
+    filename: 'index.html',
+    template: 'index.html',
+    inject: true,
+    chunks: ['jquery', 'page'] // 按照先后顺序插入script标签
+  })
+
+resolve
+
+var webpack = require("webpack");
+var path = require("path");
+
+module.exports = {
+  entry:{
+    home:"./src/js/home.js",
+    ……
+  },
+  output:{
+    path:__dirname+"/dist/js",
+    filename:"[name].min.js"
+  },
+  module:{
+    loaders:[
+      {test:/\.css$/,loader:"style-loader!css-loader"},
+      ……
+    ]
+  },
+  plugins:[
+    new webpack.ProvidePlugin({
+      $:"jquery",
+      jQuery:"jquery",
+      "window.jQuery":"jquery"
+    })
+  ]
+}

@@ -1,0 +1,38 @@
+
+1.前端 发起请求 异步ajax请求
+XMLHttpRequest
+
+2. 提交到服务端，form提交（vue-router）
+
+3.
+axios 拦截 , 页面跳转, token 验证
+https://www.cnblogs.com/dhsz/p/6410031.html
+http://blog.csdn.net/panyox/article/details/73800241
+axios.interceptors.response.use(function (response) {
+    // token 已过期，重定向到登录页面
+    if (response.data.code == 4){
+        localStorage.clear()
+        router.replace({
+                        path: '/signin',
+                        query: {redirect: router.currentRoute.fullPath}
+                    })
+    }
+    return response
+}, function (error) {
+    // Do something with response error
+    return Promise.reject(error)
+})
+
+或：
+axios.get('/home')
+ .then(response => {
+   console.log(response);
+   //
+   if( response.status === 200 && response.data.error !== '' ){
+        return Promise.reject(response.data.error);
+   }
+ })
+ .catch(error => {
+    console.log(error);
+    location.href = "/login";
+});

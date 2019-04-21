@@ -1,0 +1,51 @@
+问题1-5
+
+
+管理列表--- 未完成
+
+
+问题六：cookie设置
+http://www.expressjs.com.cn/4x/api.html#app.METHOD
+
+问题五： 数据提交方式
+
+ http://blog.csdn.net/wopelo/article/details/78783442
+ http://yijiebuyi.com/blog/90c1381bfe0efb94cf9df932147552be.html
+
+问题四
+http://cnodejs.org/topic/578908b3992ec53c146766a9
+接楼上，但是async库在现在co和promise都存在的情况下，意义已经没有那么大了，你也可以发现，上面的代码虽说解决了一定的cb嵌套，但是还是很难看，下面是promise的写法
+
+//首先你要把db.query封装成一个promise，如下：
+//这部分代码你可以放到公共lib文件里面
+function query(sql){
+	return new Promise(function (resolve, reject){
+		db.query(sql, function(err, rows){
+			if(err)
+				return reject(err);
+			relsolve(rows);
+		});
+	});
+}
+
+//下面是主逻辑
+//存储查询的sql语句的数组
+let sqlArr = [];
+//构造一个promiseArr存储所有的db查询promise对象
+let promiseArr =sqlArr.map(item=>query(item));
+//使用Promise.all方法执行；then中的dataArr即为查询的结果，顺序和sqlArr中的sql一致，处理逻辑可以放在这里；最后的catch是异常捕获，异常处理放在这里
+Promise.all(promiseArr).then(dataArr=>console.log(dataArr)).catch(err=>console.error(err));
+
+1.数据存储 https://www.zhihu.com/question/52717468
+是完全自主设计的前提下，你要考虑你的数据的组织形式和量，同时确定你使用的是关系型数据库还是nosql
+如果你的数据是内容格式分离的，比如类似latex的组织方式，那么你大可以将内容和格式分开储存，
+采取分段式的储存方式最为稳妥，即频繁更新的放数据库，大量数据的存为文件，定时将数据库和文件进行异步的update即可。
+有些数据是内容格式合一的，比如word，比如影音数据，这时候，大容量存储+索引的方式比较好，这也是普通CMS常用的。
+总结来说，总是有永存+缓存+索引的方式存在的。
+
+我个人建议，多方式存储。生成的 HTML 扔到硬盘上，访问的时候直接从磁盘读取文件提交到客户浏览器，
+这样不需要做数据处理就能火速出。如果自己修改，就读取富文本的数据。这东西也可以扔硬盘上。
+至于数据库存储的内容，我建议就是纯文字，去掉所有的格式信息，用来检索文章用。
+
+
+

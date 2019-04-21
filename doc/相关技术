@@ -1,0 +1,80 @@
+
+6.multer 处理表单数据
+
+
+5.crypto
+    crypto作为nodeJS已经稳定下来的模块在整个node中具有举足轻重的地位，一切app都需要加密解密，
+    那么crypto就是一个提供加密功能的模块。在这个模块中已经打包了OpenSSL hash, HMAC（哈希信息验证码），
+    cipher（加密）,decipher（解密）,sign（签名）以及verify（验证）的功能。
+    const crypto = require('crypto');
+    //首先引入crypto模块进项目中；
+    const secret = 'abcdefg';
+    //随手写一段明文字符串，保存到常量secret中。
+    const hash = crypto.createHmac('sha256', secret)//我们首先调用crypto模块中的createHmac()方法，通过sha256算法对明文进行哈希化。
+                       .update('I love cupcakes')
+    //在这段哈希值的基础之上，我们添加明文I love cupcakes。
+                       .digest('hex');
+    //在更新之后，我们将更新的内容的进行十六进制的消化吸收。
+    console.log(hash);
+    // Prints:
+    //   c0fa1bc00531bd78ef38c628449c5102aeabd49b5dc3a2a516ea6ea959d6658e
+    http://blog.csdn.net/qq_33315185/article/details/53436364
+
+5.markdown
+    http://blog.csdn.net/bat67/article/details/72804251
+    mavon-editor
+    https://github.com/hinesboy/mavonEditor
+     图片设置大小
+     方法一：嵌入HTML代码
+     使用img标签
+      <img src="./xxx.png" width = "300" height = "200" alt="图片名称" align=center />
+
+    方法二：使用支持图片大小更改操作的 Mou 编辑器
+    使用如下语法
+    ![](./pic/pic1_50.png =100x100)
+    https://www.zhihu.com/question/23378396
+
+4.ueditor
+    https://www.cnblogs.com/dmcl/p/7152711.html
+    https://www.jianshu.com/p/8c43636c6c47
+
+
+3.axios
+    https://unpkg.com/axios@0.12.0/dist/axios.min.js
+    上传图片：http://blog.csdn.net/qq_24147051/article/details/76862073?locationNum=4&fps=1
+    上传文件：http://blog.csdn.net/liningaa/article/details/70573354
+     var url = "hotcity.json";
+      axios.get(url,{
+          params:{
+          username: "金星老师"
+       }
+      })
+    .then(function (response) {
+        self.stu = response.data.data.hotCity;
+        console.log(response.data.data.hotCity);
+    })
+    .catch(function (error) {
+       console.log(error);
+    })
+     //var url = "http://bugwhy.com/php/index/getNews.php";
+     var url = "http://localhost:8000/login";
+           axios.post(url,{
+               name: this.username,
+      password: this.password
+     },{
+               "headers": {"Content-Type": "application/x-www-form-urlencodeed"}
+     }).then(function(res){
+           console.log(res.data);
+      })
+      .catch(function (error) {
+          console.log(error);
+                     })
+
+2.lodash前端开发用的工具库
+    https://unpkg.com/lodash@4.13.1/lodash.min.js
+
+
+1.express
+    http://www.expressjs.com.cn/starter/hello-world.html
+
+

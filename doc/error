@@ -1,0 +1,162 @@
+
+
+11.vue 路径出现#号
+http://127.0.0.1:8080/#/signin
+路由默认的hash方式,也就是利用location.hash去实现的， 如果使用history方式的话,
+如localhost:8080/index 需要在配置中增加mode: 'history'
+
+10.前端接收时间格式
+
+
+2017-07-16T14:46:01.000Z
+错误原因：发送前
+JSON.stringify({date:new Date()})
+"{"date":"\"2017-08-19T08:19:30Z\""}"
+http://huqiji.iteye.com/blog/2234328
+https://www.npmjs.com/package/mysql
+
+区不对。你这个是UTC通用标准时。
+用show variables like "%time_zone%"，看看数据库时区，改一下mysql时区
+http://www.jb51.net/article/84198.htm
+> set global time_zone = '+8:00'; ##修改mysql全局时区为北京时间，即我们所在的东8区
+> set time_zone = '+8:00'; ##修改当前会话时区
+> flush privileges; #立即生效
+
+
+9.mysql 报错
+错误：PROTOCOL_ENQUEUE_AFTER_QUIT
+Cannot enqueue Query after invoking quit.
+错误代码：var sql ="select * from article  where deleted =0  ";
+        var countsql ="select count(id) count from article  where deleted =0  ";
+        var condition="";
+        var tagcond="";
+        var timecond="";
+        var limitcond="";
+        if(param!=null){
+            if(param.tagids!=null){
+              //  var tagids = param.tagids;
+              //  tagids.split(",")
+                tagcond=" and id in  ( select articleid from tagrecord where  tagid in ("
+                    +connection.escape(param.tagids)+") )";
+               // condition+=' id = ' + connection.escape(tagid);
+            }
+            if(param.page!=null && param.pagesize!=null){
+                var statrow =( param.page-1)* param.pagesize;
+                var endrow = ( param.page)* param.pagesize-1;
+                limitcond = " limit "+ startrow+","+endrow+";";
+            }
+
+        }
+        sql =sql+tagcond+" ORDER BY createtime DESC "+limitcond;
+        countsql=countsql+tagcond+" ORDER BY createtime DESC";
+
+        new Promise(function (resolve, reject){
+            connection.query(countsql, function(error, results, fields){
+                if (error){
+                    callback({success:false,message:"查询错误",data:null});
+                    throw error;
+                    reject(error);
+                }
+
+                resolve(results);
+            });
+        }).then(function(totalarr){
+            var total = totalarr[0];
+            connection.query(sql, function (error, results, fields) {
+                if (error){
+                    callback({success:false,message:"查询错误",data:null});
+                    throw error;
+                    reject(error);
+                }
+                callback({success:true,data:{rows:results,total:total}});
+            });
+        }).catch(function(error){
+            if (error){
+                callback({success:false,message:"查询错误",data:null});
+                throw error;
+            }
+        })
+
+      connection.end();//错误关键 这里在第一次query查询之后就关闭了，所以第二次查询就报错了。
+
+8.
+错误代码：
+ template:'<Navbar></Navbar><article></article>',
+错误提示：Component template should contain exactly one root element. If you are using v-if on multiple elements, use v-else-if to chain them instead.
+原因：vue模板只能有一个根节点
+解决： template:'<div><Navbar></Navbar><article></article></div>',
+
+7. webpack 生成js报错
+ERROR in ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-d73175ba","hasScoped":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./src/components/Home/articles.vue
+  (Emitted value instead of an instance of Error)
+    Error compiling template:
+
+    <div>
+        <article v-for="article in articlelist" class="">
+            <header>
+       。。。。。。。
+
+    - tagid="{{tag.id}}": Interpolation inside attributes has been removed. Use v-bind or the colon shorthand instead. For example, instead of <div id="{{ val }}">, use <div :id="val">.
+
+   @ ./src/components/Home/articles.vue 6:2-207
+   @ ./src/index.js
+   @ multi ./src/index.js ./webpack.config.js
+
+原因：<span v-for="tag in article.tags" class="xz-tag" :tagid="{{tag.id}}">{{tag.text}}</span>
+这个写法错误
+解决：
+
+
+6.[Vue warn]: v-on without argument expects an Object value
+    v-on ="homeClick"忘记写click了
+    v-on:click="homeClick"
+5. [vuex] must call Vue.use(Vuex) before creating a store instance.
+
+var store = new Vuex.Store 在使用Vuex.store前需要先Vue.use(Vuex)
+
+4.css 父元素取消浮动
+      .clearfix{
+            clear:both;
+        }
+        .clearfix:after{
+            display:block;
+            height:0;
+          /*  content:"·";*/
+
+        }
+        如果不配置content占位，只 display:block;height:0;时，.clearfix:after的伪类未解析？Developer Tools中的Elements未出现
+    p384 css权威
+
+3.问题：You are using the runtime-only build of Vue where the template compiler is not available.
+ Either pre-compile the templates into render functions, or use the compiler-included build.
+    解决：http://www.imooc.com/article/17868
+    https://doc.webpack-china.org/configuration/resolve/
+    https://doc.webpack-china.org/concepts/module-resolution/
+    未配置时，vue没有引入到webpack组装的文件中bundle，所以Vue相关的内容没法解析
+    resolver 帮助 webpack 找到 bundle 中需要引入的模块代码，这些代码在包含在每个 require/import 语句中。
+  当打包模块时，webpack 使用 enhanced-resolve 来解析文件路径
+    resolve:{
+        alias:{
+            vue:'vue/dist/vue.js'
+        }
+    },
+
+    一旦根据上述规则解析路径后，解析器(resolver)将检查路径是否指向文件或目录。如果路径指向一个文件：
+
+    如果路径具有文件扩展名，则被直接将文件打包。
+    否则，将使用 [resolve.extensions] 选项作为文件扩展名来解析，此选项告诉解析器在解析中能够接受哪些扩展名（例如 .js, .jsx）。
+    如果路径指向一个文件夹，则采取以下步骤找到具有正确扩展名的正确文件：
+
+    如果文件夹中包含 package.json 文件，则按照顺序查找 resolve.mainFields 配置选项中指定的字段。并且 package.json 中的第一个这样的字段确定文件路径。
+    如果 package.json 文件不存在或者 package.json 文件中的 main 字段没有返回一个有效路径，则按照顺序查找 resolve.mainFiles 配置选项中指定的文件名，看是否能在 import/require 目录下匹配到一个存在的文件名。
+    文件扩展名通过 resolve.extensions 选项采用类似的方法进行解析。
+    webpack 根据构建目标(build target)为这些选项提供了合理的默认配置。
+2.ERROR in ./src/components/Navbar.vue
+  Module build failed: Error: Cannot find module 'vue-template-compiler'
+  原因：没有装
+
+1.Module not found: Error: Can't resolve 'fsevents' in 'D:\nodeworkspace\blogclient\node_modules\chokidar\lib'
+原因是因为： fsevent是mac osx系统的，在win或者Linux下使用了 所以会有警告，忽略即可。意思就是你已经安装成功了。气死我吧，我一直以为有啥问题呢
+
+
+

@@ -80,7 +80,20 @@ export default{
     getArticleByCode:function(param){
         return  axios({
             url: '/a/dt/'+param.code,
-            method: 'post'
+            method: 'post',
+            data:param
+        }).then(function(data){
+            return new Promise( function(resolve){
+
+                resolve(data.data)
+            });
+        })
+    },
+    getEditArticleByCode:function(param){
+        return  axios({
+            url: '/a/edit/'+param.code,
+            method: 'post'/*,
+            data:param*/
         }).then(function(data){
             return new Promise( function(resolve){
 
@@ -90,8 +103,9 @@ export default{
     },
     checkArticleCode:function (param) {
         return  axios({
-            url: '/a/checkcode/'+param.code,
-            method: 'post'
+            url: '/a/checkcode',
+            method: 'post',
+            data:param,
         }).then(function(data){
             return new Promise( function(resolve){
                 resolve(data.data)

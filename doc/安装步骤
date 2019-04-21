@@ -1,0 +1,21 @@
+1.npm init 初始化package.json
+2.
+ babel-core babel-loader babel-plugin-transform-runtime babel-preset-es2015 babel-preset-stage-0 babel-runtime
+    bootstrap cross-env css-loader eslint eslint-loader eslint-plugin-vue extract-text-webpack-plugin file-loader
+ font-awesome html-webpack-plugin image-webpack-loader npm-run-all rimraf style-loader
+
+
+ universal-cookie url-loader vee-validate vue vue-hot-reload-api vue-html-loader vue-loader  vue-router
+
+  vue-style-loader vue-template-compiler vuex vuex-router-sync webpack webpack-dev-server
+
+
+
+
+ universal-cookie url-loader vee-validate vue vue-hot-reload-api vue-html-loader vue-loader vue-resource vue-router
+
+    vue-style-loader vue-template-compiler vuex vuex-router-sync webpack webpack-dev-server
+     vue-strap
+     vue-toast
+
+ jackblog-sass nodemon

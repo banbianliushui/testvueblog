@@ -1,0 +1,172 @@
+
+9.innerhtml
+v-html="article.content" 不用{{}}插值？
+
+打的包中有 "innerHTML": _vm._s(article.content)，这里是只变量，不用插值了
+双大括号会将数据解释为纯文本，而非 HTML 。
+
+如下：
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', _vm._l((_vm.articleList), function(article) {
+    return _c('article', {}, [_c('header', [_c('span', {
+      staticClass: "xz-date"
+    }, [_vm._v(_vm._s(_vm._f("formatDate")(article.publishtime)))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(article.title))])]), _vm._v(" "), _c('section', {
+      domProps: {
+        "innerHTML": _vm._s(article.content)
+      }
+    }), _vm._v(" "), _c('footer', [_c('div', [_c('span', [_vm._v("阅读" + _vm._s(article.readcount))]), _vm._v(" "), _c('span', [_vm._v("·评论" + _vm._s(article.replycount))]), _vm._v(" "), _c('span', [_vm._v("·喜欢" + _vm._s(article.likecount))])]), _vm._v(" "), _c('div')])])
+  }))
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-d73175ba", module.exports)
+  }
+}
+
+
+
+8.接收父组件的数据props
+props 可以是数组或对象，用于接收来自父组件的数据。props 可以是简单的数组，或者使用对象作为替代，对象允许配置高级选项，
+如类型检测、自定义校验和设置默认值。
+相当于data等可以直接用于模板 ，可以被自动更新
+
+
+2.一个组件有template和组件中用到的参数数据；数据可以由data、computed等注入
+
+store:
+        store仓库属性：
+            state 被管理的状态数据 ，该数据被放到组件模板用关联后用于显示
+            mutation 状态数据的操作，调用本属性中的方法修改状态数据，然后更新视图中的显示内容
+        store仓库方法：
+            store.state.属性：获取仓库状态属性,
+            store.commit('mutation中的方法') 调用store中注册的指定方法改变状态数据
+
+
+7.Class Style绑定
+    v-bind:class 动态切换class ：
+               v-bind:class="{ active: isActive }"，其中active是样式类
+               class="static"  v-bind:class="{ active: isActive, 'text-danger': hasError }"
+               也可以绑定class对象
+
+
+
+6.计算属性
+    用于对数据属性的复杂逻辑计算处理，或处理结果涉及较多数值数据（用到缓存）。computed对象中的属性数据可以和data对象中的数据一样用.一般computed中的属性数据依赖于data
+    对象中的属性数据，当data中的属性数据变化时相应的计算属性数据也跟着变化。
+    computed计算属性：是基于他们的依赖进行缓存的，计算属性只有在它的相关依赖发生改变时才会重新求值（理解：它也是统一管理的，
+        被依赖的数据变化后，找到对应的依赖计算属性且计算，计算后被更新到view，重新渲染？
+        同时计算属性有被缓存起来下次getter可直接用）。默认只用getter
+    methods：没有缓存，只要发生重新渲染，method调用总会执行该函数。
+    watched属性：观察和响应Vue实例上的数据变动。适用于执行异步操作或开销较大的操作。输入input查后台ajax来补全
+
+
+
+
+
+5.模板（文本插值、纯html（v-html="rawHtml"））
+    vue将模板编译成虚拟DOM渲染函数，在应用状态改变时，Vue能智能计算出重新渲染组件的最小代价并应用到Dom操作上。
+    文本插值
+    纯html： <div v-html="rawHtml"></div>
+        注意：这里rawHtml里面不能出现子组件，或复合的局部模板，Vue不是基于字符串的模板引擎
+    javascript表达式：{{ message.split('').reverse().join('') }}
+    指令： v-for v-if v-on v-model
+    参数： 指令参数以冒号隔开 v-bind:href="" , v-on:click
+    修饰符： 以半角点号表明 v-on:submit.prevent
+    过滤器： 作用是格式化文本，用于mustache插值和v-bind表达式用通道符|隔开：{{ message | capitalize }}    v-bind:id="rawId | formatId"
+    缩写：常用指令缩写 v-bind -> :    v-on -> @
+
+4.实例生命周期
+        beforeCreate： new Vue() 时被调用
+        created：实例创建时监听数据、初始化事件等后调用被调用
+        beforeMount:挂载el之前被调用
+        mounted:挂载el之后被调用
+        beforeUpdate:属性更新，虚拟节点重染之前被调用
+        updated:属性对于虚拟节点重新渲染之后被调用
+        beforeDestroy:vm.$destroy被调用时
+        destroyed:卸载了监视器、子组件和事件监听之后调用
+        new Vue() -> (beforeCreate) ->Observe Data -> initEvents ->(created) -compile template
+        -> (beforeMount) -> create vm.$el -> ( mounted)  --> (beforeUpdate ->vitrual dom re-render -> updated ) --> beforeDestroy
+        -> teardown(拆卸) watchers,child components and event listeners ->Destroyed -> (destroyed)
+
+
+3.监听实例data数据对象中的对象属性变化，vm.$watch('a',function(){})
+2.vue实例代理data对象中的属性，这些属性可以用在模板（或组件）中，这个对象中的属性是可以被响应的（值改变触发视图重新渲染）
+
+1.Vue实例化，使用构造器实例化vue对象（new），实例化需传入一个对象，包括data数据、template模板、挂载对象el、filters过滤器
+    方法、生命周期函数（created、mounted、updated、destroyed）
+    this指向vue实例。
+    实例化时传入的参数对象都会被加到最外层的vue实例对象上，可this.xx来调用
+
+    var vm = new Vue({
+      el: '#example',
+      data: {
+        message: 'Hello',
+        question: '',
+        firstName:'',
+        lastName:'',
+         isActive: true,
+        answer: 'I cannot give you an answer until you ask a question!'
+      },
+      filters:{
+
+      },
+      computed: {
+        // a computed getter
+        reversedMessage: function () {
+          // `this` points to the vm instance
+          return this.message.split('').reverse().join('')
+        },
+         fullName: {
+            // getter
+            get: function () {
+              return this.firstName + ' ' + this.lastName
+            },
+            // setter
+            set: function (newValue) {
+              var names = newValue.split(' ')
+              this.firstName = names[0]
+              this.lastName = names[names.length - 1]
+            }
+          }
+      },
+      methods:{
+        reversedMessage: function () {
+          return this.message.split('').reverse().join('')
+        },
+        // _.debounce 是一个通过 lodash 限制操作频率的函数。
+        // 在这个例子中，我们希望限制访问yesno.wtf/api的频率
+        // ajax请求直到用户输入完毕才会发出
+        // 学习更多关于 _.debounce function (and its cousin
+        // _.throttle), 参考: https://lodash.com/docs#debounce
+        getAnswer: _.debounce(
+          function () {
+            if (this.question.indexOf('?') === -1) {
+              this.answer = 'Questions usually contain a question mark. ;-)'
+              return
+            }
+            this.answer = 'Thinking...'
+            var vm = this
+            axios.get('https://yesno.wtf/api')
+              .then(function (response) {
+                vm.answer = _.capitalize(response.data.answer)
+              })
+              .catch(function (error) {
+                vm.answer = 'Error! Could not reach the API. ' + error
+              })
+          },
+          // 这是我们为用户停止输入等待的毫秒数
+          500
+        )
+
+
+      },
+       watch: {
+          // 如果 question 发生改变，这个函数就会运行
+          question: function (newQuestion) {
+            this.answer = 'Waiting for you to stop typing...'
+            this.getAnswer()
+          }
+        },
+    })

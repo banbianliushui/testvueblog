@@ -25,16 +25,20 @@
 <script>
     import api from '../../api/api.js'
     import util from '../../util/util.js'
+
+
     export default {
         props:['eCode','eSummary','eContent','eTitle','eId'],
         data (){
             return {
-                code:'',
-                title:'',
+                /*code:this.eCode?this.eCode:"",
+                title:this.eTitle?this.eTitle:"",*/
                 errtitle:'',
                 img_file: {},
-                summaryValue:'',
-                eValue:''
+            /*    summaryValue:this.eSummary?this.eSummary:"",
+                eValue:this.eContent?this.eContent:"",
+                id:this.eId?this.eId:""*/
+
 
             }
         },
@@ -42,21 +46,54 @@
             errcode:function(){
                return  this.$store.state.admin.errcode;
             },
-          /*  code:function(){
-                return this.eCode;
+        /*   articleValues:function(){
+                //this.summaryValue =
+                return this.$store.state.admin.articleValue  ;
+            },*/
+            code:{
+                get : function(){
+                    var  articleValues = this.$store.state.admin.articleValue;
+                    this.eValue = articleValues!=null?articleValues.dmtxt:"";
+                    return articleValues!=null?articleValues.code:"";
+                },
+               set:function(value){
+                 //   this.code = value;
+               }
+
             },
-            summary:function(){
-                return this.eSummary;
+            summaryValue:{
+               get:function () {
+                   var  articleValues = this.$store.state.admin.articleValue
+                   return  articleValues!=null?articleValues.summary:"";
+               },
+                set:function(value){
+                 //  this.summaryValue = value;
+                }
+
             },
-            title:function(){
-                return this.eTitle;
+            title:{
+                get :function(){
+                    var  articleValues = this.$store.state.admin.articleValue
+                    return  articleValues!=null?articleValues.title:"";
+                },
+                set:function(title){
+
+                }
             },
-            content:function(){
-                return this.eContent;
-            },
+           eValue:{
+               get :function(){
+                   var  articleValues = this.$store.state.admin.articleValue
+                   return  articleValues!=null?articleValues.dmtxt:"";
+               },
+               set:function(title){
+
+               }
+           },
             id:function(){
-                return this.eId;
-            }*/
+                var  articleValues = this.$store.state.admin.articleValue
+                return  articleValues!=null?articleValues.id:"";
+              //  return this.eId;
+            }
         },
        methods:{
            simpCodestr($event){
@@ -66,7 +103,7 @@
            checkCodestr($event){
                this.code = $event.target.value.replace(/[^0-9a-zA-Z-_]+/g,'');
                var code = util.trim(this.code);
-                this.$store.dispatch('checkCode',{code:code});
+                this.$store.dispatch('checkCode',{code:code,id:this.id});
 
            },
            changeSummary($event){
@@ -121,6 +158,45 @@
                     $vm.$img2Url(pos, data.data.url);
                 })
             }
+       },
+      /*  beforeUpdate(){
+
+        },*/
+        beforeRouteEnter (to, from, next) {
+            // 在渲染该组件的对应路由被 confirm 前调用
+            // 不！能！获取组件实例 `this`
+            // 因为当守卫执行前，组件实例还没被创建
+            function check(vm ){
+                if( vm.$route.name=='adminedit'){
+                    let params = vm.$route.params;
+                    if(params.code!=""){
+                        let param ={code:params.code};
+                        vm.$store.dispatch('editArticle',param)
+                    }
+                }else{
+                    vm.$store.state.admin.articleValue = null;
+                }}
+            next(check);
+        },
+       created(){
+           console.log("xes")
+         /*  if( this.$route.name=='adminedit'){
+               let params = this.$route.params;
+               if(params.code!=""){
+                   let param ={code:params.code};
+                   this.$store.dispatch('editArticle',param)
+               }
+           }else{
+               this.$store.state.admin.articleValue = null;
+           }
+           console.log(this.$store.state.admin.articleValue)   ;*/
+           /*let article = this.$store.state.admin.articleValue;
+           if(article){
+               this.code = article.code;
+               this.title = article.title;
+               this.summaryValue = article.summary;
+               this.eValue = article.content;
+           }*/
        }
        /* props:['editorValue'],*/
       /*  computed:{

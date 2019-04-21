@@ -1,0 +1,143 @@
+
+8.
+
+
+7.
+
+安装
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+6.Actions 提交的时mutation，不直接变更状态，参数为context包括（context.state， context.getters ，context.commit），
+通过store.dispatch('increment')方法触发。
+
+    const store = new Vuex.Store({
+      state: {
+        count: 0
+      },
+      mutations: {
+        increment (state) {
+          state.count++
+        }
+      },
+      actions: {
+        increment (context) {
+          context.commit('increment')
+        }
+      }
+    })
+
+    // 以载荷形式分发
+    store.dispatch('incrementAsync', {
+      amount: 10
+    })
+
+    // 以对象形式分发
+    store.dispatch({
+      type: 'incrementAsync',
+      amount: 10
+    })
+5.Mutations更改store中state状态
+    每个mutation都有一个字符串的事件类型（type）和一个回调（handler），并带state参数。
+    const store = new Vuex.Store({
+      state: {
+        count: 1
+      },
+      mutations: {
+        increment (state) {
+          // 变更状态
+          state.count++
+        }
+      }
+    })
+    提交方法一：
+    store.commit('increment', {
+      amount: 10
+    })
+    提交方法二：
+    store.commit({
+      type: 'increment',
+      amount: 10
+    })
+
+    注：1.使用常量替代 Mutation 事件类型
+        2.mutation 必须是同步函数
+4.Getters
+    用于从store中派生一些状态，供多个地方（组件）使用此属性
+
+
+    const store = new Vuex.Store({
+      state: {
+        todos: [
+          { id: 1, text: '...', done: true },
+          { id: 2, text: '...', done: false }
+        ]
+      },
+      getters: {
+        doneTodos: state => {
+          return state.todos.filter(todo => todo.done)
+        }
+      }
+    })
+
+    其他组件使用：
+    computed: {
+      doneTodosCount () {
+        return this.$store.getters.doneTodosCount
+      }
+    }
+
+
+3.组件状态较少时可以用computed计算属性，多状态是使用mapState函数，帮助生成计算属性。注：...mapState展开符混入对象
+   注：不用把所有的状态都加入vuex，有些状态严格属于单个组件，最好还是作为组件的局部状态
+
+    import { mapState } from 'vuex'
+    export default {
+      // ...
+      computed: mapState({
+        // 箭头函数可使代码更简练
+        count: state => state.count,
+
+        // 传字符串参数 'count' 等同于 `state => state.count`
+        countAlias: 'count',
+
+        // 为了能够使用 `this` 获取局部状态，必须使用常规函数
+        countPlusLocalState (state) {
+          return state.count + this.localCount
+        }
+      })
+    }
+
+2.Vuex使用单一状态树，即一个对象就包含了全部的应用层级状态。
+    Vuex通过store选项，提供从根组件注入状态到子组件中（需调用 Vue.use(Vuex)）
+    根组件：
+    const app = new Vue({
+      el: '#app',
+      // 把 store 对象提供给 “store” 选项，这可以把 store 的实例注入所有的子组件
+      store,
+      components: { Counter },
+      template: `
+        <div class="app">
+          <counter></counter>
+        </div>
+      `
+    })
+    子组件：
+    const Counter = {
+      template: `<div>{{ count }}</div>`,
+      computed: {
+        count () {
+          return this.$store.state.count
+        }
+      }
+    }
+
+1.每个Vuex核心是store，它包含应用中大部分的状态（state，组件中用的展示值的数据源，而直接联系模板数据的是data  computed）
+    关键点一：vue组件从store读取状态，若store中的状态发生变化，相应的组件也会更新。
+    关键点二：不能直接改变store中的状态（对应数据的值）。改变的唯一途径是显示提交（commit）mutations。
+    关键点三：组件中store的state状态的调用可以在计算属性中返回
+
+
+

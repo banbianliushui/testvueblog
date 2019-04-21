@@ -1,0 +1,30 @@
+
+9.mavonEditor引入 css等
+https://mip.itweike.com/article/30
+
+
+8.单页请求，如果get请求不存在则返回默认主页 html
+    前台对查不到的路由转404；
+
+7.根节点上不能加属性？
+    html的 id='app' 的div节点上不能加 class、style属性，输出html的根节点没有这些属性。
+
+6.跨域
+https://segmentfault.com/a/1190000006095018
+
+5.前端请求 ajax.xmlhttprequest  ,fetch
+https://segmentfault.com/a/1190000006095018
+https://fetch.spec.whatwg.org/
+https://segmentfault.com/a/1190000003810652
+https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+
+4.mysql事务
+
+3.mysql嵌套查询
+请使用async库或promise等异步流程处理库
+
+
+2. exports require   export import区别
+
+1.后台拦截器
+
