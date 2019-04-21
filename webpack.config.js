@@ -2,7 +2,7 @@
 
 var path  = require('path');
 //https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css
-/*const ExtractTextPlugin = require('extract-text-webpack-plugin')*/
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports ={
     entry:'./src/index.js',
@@ -27,10 +27,16 @@ module.exports ={
                 exclude: /node_modules|vue\/dist|vue-hot-reload-api|vue-router\/|vue-loader|server/
             },
           {test: /\.css$/,
-             use: [
+             /* exclude: /node_modules/,*/
+              use:ExtractTextPlugin.extract({
+                 fallback: "style-loader",
+                 use: "css-loader"
+             })
+             /*use: [
                'style-loader',
               'css-loader'
-             ]},
+             ]*/
+          },
             {
                 test: /\.(png|jpg|gif)$/,
                 loader: 'file-loader',
@@ -38,7 +44,7 @@ module.exports ={
             },
             {
                 test: /\.(woff|ttf|eot|svg)/,
-                loader: 'file-loader?name=font/[name].[ext]&publicPath=../'
+                loader: 'file-loader?name=font/[name].[ext]&publicPath=/'/*&outputPath=font/*/
             },
             /*{
                 test:/\.css$/,
@@ -54,11 +60,11 @@ module.exports ={
             }*/]
     },
     plugins: [
-       /* new ExtractTextPlugin({
-            filename:"common.css",
+        new ExtractTextPlugin({//
+            filename:"common1.css",
             allChunks:true,
             disable:false
-        }),*/
+        }),
         /*new webpack.optimize.CommonsChunkPlugin({
             names: ['vue', 'common'],
             filename: 'src/public/js/[name].[chunkhash:8].js',

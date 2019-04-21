@@ -17,14 +17,17 @@ exports.articles={
         console.log(query.sql);
        connection.end();
     },
-    getArticleByCode:function(code,callback){
+    getArticleByCode:function(param,callback){
+        let code = param.code;
+        let type = param.type;
         if(code!=null&&typeof code === "string"){
             code.replace(/[\'|\"]/g,"");
             //code=connection.escape(code);//字符串自动加转义
             console.log("code=",code);
 
             new Promise(function (resolve, reject){
-                connection.query('select  id,title,summary,content,category,categoryname,description,' +
+                connection.query('select  id,title,summary,'+(type=='edit'?'dmtxt':'content')
+                    +',category,categoryname,description,' +
                     'picurl,createtime,updatetime' +
                     ',state,publishtime,readcount,replycount,likecount,code from article where code= ?',[code],
                     function(err,results,fields){
@@ -43,6 +46,7 @@ exports.articles={
                         id = data[0].id
                     } else {
                         resolve(data);
+                        return ;
                     }
                     var sql = " select tagid,tagname from tagrecord ";
                     sql += " where articleid=" + connection.escape(id);
@@ -52,7 +56,7 @@ exports.articles={
                             throw error;
                             reject(error);
                         }
-                        data[0].tags = results;
+                        data&& data[0]&&( data[0].tags = results) ;
                         resolve(data)
 
                     });
@@ -71,17 +75,19 @@ exports.articles={
             callback({success:false,code:"error code not string"});
         }
     },
-    checkCode:function(code,callback){
+    checkCode:function(param,callback){
+        let code = param&&param.code;
+        var id = param&&param.id&&(+param.id);
         if(typeof code === "string"){
             code.replace(/[\'|\"]/g,"");
             console.log("code=",code);
-            connection.query('select  count(id) num from article where code= ?',[code],
+            connection.query('select  id from article where code= ?',[code],
                 function(err,results,fields){
                     if(err){
                         callback({success:false,message:"查询错误",data:null});
                         throw err;
                     }
-                    if(results&&results.length>0&&results[0].num>0){
+                    if(results&&results.length>0&&results[0].id!==+id){
                         callback({success:true,data:false});//已经存在
                     }else{
                         callback({success:true,data:true});

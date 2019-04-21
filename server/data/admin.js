@@ -19,7 +19,7 @@ module.exports  = {
             //
             //param.tags  ,tagids= ?
             if(param)
-            connection.query('UPDATE article SET title = ?, summary = ?, content = ? ，code = ? WHERE id = ?',
+            connection.query('UPDATE article SET title = ?, summary = ?, content = ? ,code = ? WHERE id = ?',
                 [param.title, param.summary,param.content,param.code, param.id], function (error, results, fields) {
                     if (error){
                         callback({success:false,msg:"error "});

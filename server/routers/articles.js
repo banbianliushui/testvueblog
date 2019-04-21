@@ -12,13 +12,16 @@ router.post("/alist",checkSession,function(req,res){
 
     articlesAction.articlesAction.getArticleList(req,res);
 })
+router.post("/edit/:code",function(req,res){
 
+    articlesAction.articlesAction.getEditArticle(req,res);
+})
 router.post("/dt/:code",function(req,res){
 
     //var code = req.params.code;
     articlesAction.articlesAction.getArticle(req,res);
 })
-router.post("/checkcode/:code",function(req,res){
+router.post("/checkcode",function(req,res){
 
    // var code = req.params.code;
     articlesAction.articlesAction.checkCode(req,res);
